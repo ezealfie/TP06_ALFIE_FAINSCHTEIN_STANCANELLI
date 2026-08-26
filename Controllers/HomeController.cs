@@ -14,10 +14,21 @@ public class HomeController : Controller
     }
 
     public IActionResult Index()
+    {   
+        return RedirectToAction("Inicio", "Home");
+
+    }
+  public IActionResult Inicio()
     {
         return View();
     }
-
+    [HttpPost]
+    public IActionResult ComenzarJuego(string nombreJugador, DateTime fechaHora)
+    {
+        BD bd = new BD();
+        bd.IniciarPartida(new Partidas(nombreJugador, fechaHora));
+        return View();
+    }
     public IActionResult Privacy()
     {
         return View();

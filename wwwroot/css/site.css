@@ -19,6 +19,57 @@ html {
 
 body {
   margin-bottom: 60px;
+  background:
+    radial-gradient(circle at top, rgba(37, 140, 251, 0.18), transparent 35%),
+    linear-gradient(180deg, #0f172a 0%, #111827 40%, #f8fafc 40%, #f8fafc 100%);
+}
+
+.escape-hero {
+  min-height: calc(100vh - 120px);
+}
+
+.min-vh-75 {
+  min-height: 75vh;
+}
+
+.escape-card {
+  border-radius: 1.5rem;
+  border: none;
+}
+
+.escape-info {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 45%, #7c3aed 100%);
+}
+
+.escape-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.feature-item {
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  padding: 0.55rem 1rem;
+  font-size: 0.95rem;
+  backdrop-filter: blur(6px);
+}
+
+.escape-form .form-control {
+  border-radius: 0.9rem;
+  padding: 0.9rem 1rem;
+}
+
+.escape-form .btn {
+  border-radius: 0.9rem;
+}
+
+@media (max-width: 991.98px) {
+  .escape-info {
+    border-top-left-radius: 1.5rem;
+    border-top-right-radius: 1.5rem;
+  }
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
