@@ -3,25 +3,71 @@ using Microsoft.Data.SqlClient;
 
 public class BD
 {
-    private readonly string _connectionString = @"Server=localhost;Database=TP06;Integrated Security=True;TrustServerCertificate=True;";
+    private string _connectionString = @"Server=localhost;Database=TP06;Integrated Security=True;TrustServerCertificate=True;";
 
-    public void IniciarPartida(Partidas partida)
+    public int IniciarPartida(Partidas partida)
     {
-        const string sql = @"INSERT INTO Partidas (NombreParticipante, FechaInicio) VALUES (@NombreParticipante, @FechaInicio)";
+        const string sqlInsert = @"INSERT INTO Partidas (NombreParticipante, FechaInicio) VALUES (@NombreParticipante, @FechaInicio)";
+        const string sqlSelect = @"SELECT TOP 1 Id
+                                   FROM Partidas
+                                   WHERE NombreParticipante = @NombreParticipante AND FechaInicio = @FechaInicio
+                                   ORDER BY Id DESC";
 
         using (SqlConnection conexion = new SqlConnection(_connectionString))
         {
-            conexion.Execute(sql, new { partida.NombreParticipante, partida.FechaInicio });
+            conexion.Execute(sqlInsert, new { partida.NombreParticipante, partida.FechaInicio });
+            return conexion.QueryFirstOrDefault<int>(sqlSelect, new { partida.NombreParticipante, partida.FechaInicio });
+        }
+    }
+
+    public List<Pedidos> ObtenerPedidosPendientes(int partidaId)
+    {
+        const string sql = @"SELECT Id, PartidaId, TicketNumero, DetalleOrden, NotasCliente, EsFalso, Estado
+                             FROM Pedidos
+                             WHERE PartidaId = @PartidaId AND Estado = 'Pendiente'";
+
+        using (SqlConnection conexion = new SqlConnection(_connectionString))
+        {
+            return conexion.Query<Pedidos>(sql, new { PartidaId = partidaId }).ToList();
+        }
+    }
+
+    public bool TodosLosPedidosSonFalsos(int partidaId, int[] ticketsSeleccionados)
+    {
+        if (ticketsSeleccionados == null || ticketsSeleccionados.Length == 0)
+        {
+            return false;
+        }
+
+        const string sql = @"SELECT COUNT(1)
+                             FROM Pedidos
+                             WHERE PartidaId = @PartidaId
+                               AND Id IN @Ids
+                               AND EsFalso = 1";
+
+        using (SqlConnection conexion = new SqlConnection(_connectionString))
+        {
+            int cantidadFalsos = conexion.QueryFirstOrDefault<int>(sql, new { PartidaId = partidaId, Ids = ticketsSeleccionados });
+            return cantidadFalsos == ticketsSeleccionados.Length;
+        }
+    }
+
+    public int CancelarPedidos(int partidaId, int[] ticketsSeleccionados)
+    {
+        const string sql = @"UPDATE Pedidos
+                             SET Estado = 'Cancelado'
+                             WHERE PartidaId = @PartidaId
+                               AND Id IN @Ids";
+
+        using (SqlConnection conexion = new SqlConnection(_connectionString))
+        {
+            return conexion.Execute(sql, new { PartidaId = partidaId, Ids = ticketsSeleccionados });
         }
     }
 
     public void InsertarPedidosParaPartida(int partidaId)
     {
-        const string sql = @"
-            INSERT INTO Pedidos (PartidaId, DetalleOrden, NotasCliente, EsFalso, Estado)
-            VALUES (@PartidaId, @DetalleOrden, @NotasCliente, @EsFalso, @Estado);";
-
-        var pedidos = new List<Pedidos>
+        List<Pedidos> pedidos = new List<Pedidos>
         {
             new Pedidos { PartidaId = partidaId, TicketNumero = 1, DetalleOrden = "Doble con cheddar", NotasCliente = "Sin cebolla", EsFalso = false, Estado = "Pendiente" },
             new Pedidos { PartidaId = partidaId, TicketNumero = 2, DetalleOrden = "Hamburguesa clásica con tomate y lechuga", NotasCliente = "Pan bien tostado", EsFalso = false, Estado = "Pendiente" },
@@ -37,30 +83,21 @@ public class BD
             new Pedidos { PartidaId = partidaId, TicketNumero = 12, DetalleOrden = "Mega burger con martillo neumático y pepinillos en órbita", NotasCliente = "Urgente: romper la realidad", EsFalso = true, Estado = "Pendiente" }
         };
 
+        const string sql = @"INSERT INTO Pedidos (PartidaId, TicketNumero, DetalleOrden, NotasCliente, EsFalso, Estado) VALUES (@PartidaId, @TicketNumero, @DetalleOrden, @NotasCliente, @EsFalso, @Estado)";
+
         using (SqlConnection conexion = new SqlConnection(_connectionString))
         {
-            conexion.Open();
-
-            using (var transaction = conexion.BeginTransaction())
+            foreach (Pedidos pedido in pedidos)
             {
-                try
+                conexion.Execute(sql, new
                 {
-                    conexion.Execute(sql, pedidos.Select(p => new
-                    {
-                        p.TicketNumero,
-                        p.PartidaId,
-                        p.DetalleOrden,
-                        p.NotasCliente,
-                        p.EsFalso,
-                        p.Estado
-                    }), transaction);
-                    transaction.Commit();
-                }
-                catch
-                {
-                    transaction.Rollback();
-                    throw;
-                }
+                    pedido.PartidaId,
+                    pedido.TicketNumero,
+                    pedido.DetalleOrden,
+                    pedido.NotasCliente,
+                    pedido.EsFalso,
+                    pedido.Estado
+                });
             }
         }
     }

@@ -1,0 +1,274 @@
+@model List<Pedidos>
+
+@{
+    ViewData["Title"] = "Sistema de Gestión de Pedidos";
+}
+
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body, html {
+        background: #2b3e50;
+        color: #fff;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        overflow-x: hidden;
+    }
+
+    .kds-container {
+        background: #2b3e50;
+        min-height: 100vh;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .kds-header {
+        position: relative;
+        z-index: 2;
+        margin-bottom: 20px;
+        padding: 20px;
+        background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+        border: 1px solid #1a252f;
+        border-radius: 8px;
+    }
+
+    .kds-header h1 {
+        font-size: 1.8em;
+        color: #fff;
+        letter-spacing: 1px;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .kds-header p {
+        color: #bdc3c7;
+        font-size: 0.9em;
+    }
+
+    .status-bar {
+        display: none;
+    }
+
+    .status-item {
+        display: none;
+    }
+
+    .status-number {
+        display: none;
+    }
+
+    .status-label {
+        display: none;
+    }
+
+    .message-alert {
+        position: relative;
+        z-index: 2;
+        margin-bottom: 20px;
+        padding: 15px 20px;
+        border-radius: 6px;
+        border-left: 4px solid;
+        font-weight: 600;
+    }
+
+    .message-alert.success {
+        background: #d4edda;
+        border-left-color: #28a745;
+        color: #155724;
+    }
+
+    .message-alert.danger {
+        background: #f8d7da;
+        border-left-color: #dc3545;
+        color: #721c24;
+    }
+
+    .message-alert.warning {
+        background: #fff3cd;
+        border-left-color: #ffc107;
+        color: #856404;
+    }
+
+    .pedidos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 16px;
+        margin-bottom: 30px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .ticket-card {
+        background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+        border: 2px solid #7f8c8d;
+        border-radius: 8px;
+        padding: 18px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .ticket-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #e74c3c 0%, #e67e22 100%);
+    }
+
+    .ticket-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #555;
+    }
+
+    .ticket-number {
+        font-size: 1.6em;
+        color: #fff;
+        font-weight: 700;
+        letter-spacing: 1px;
+        font-family: 'Courier New', monospace;
+    }
+
+    .ticket-detail {
+        color: #ecf0f1;
+        margin: 12px 0;
+        font-size: 0.95em;
+        line-height: 1.6;
+        word-wrap: break-word;
+    }
+
+    .ticket-detail strong {
+        color: #f39c12;
+        font-weight: 600;
+    }
+
+    .ticket-notes {
+        color: #bdc3c7;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid #555;
+        font-size: 0.9em;
+        font-style: italic;
+    }
+
+    .checkbox-wrapper {
+        margin: 14px 0 0 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 0;
+        border-top: 1px solid #555;
+    }
+
+    .checkbox-wrapper input[type="checkbox"] {
+        width: 22px;
+        height: 22px;
+        cursor: pointer;
+        accent-color: #e74c3c;
+    }
+
+    .checkbox-wrapper label {
+        color: #ecf0f1;
+        font-weight: 600;
+        cursor: pointer;
+        margin: 0;
+        font-size: 0.95em;
+    }
+
+    .button-container {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        padding: 30px;
+    }
+
+    .purga-button {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        color: #fff;
+        border: 2px solid #a93226;
+        padding: 16px 50px;
+        font-size: 1.1em;
+        font-weight: 700;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        letter-spacing: 1px;
+        cursor: pointer;
+        border-radius: 6px;
+        box-shadow: 0 6px 16px rgba(231, 76, 60, 0.4);
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+    }
+
+    .purga-button:hover {
+        background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+        box-shadow: 0 8px 24px rgba(231, 76, 60, 0.6);
+        transform: translateY(-2px);
+    }
+
+    .purga-button:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+    }
+</style>
+
+<div class="kds-container">
+    <div class="kds-header">
+        <h1>SISTEMA DE GESTIÓN DE PEDIDOS</h1>
+        <p>Verificar y procesar órdenes</p>
+    </div>
+
+    @if (ViewBag.Mensaje != null)
+    {
+        <div class="message-alert @(ViewBag.TipoMensaje == "danger" ? "danger" : ViewBag.TipoMensaje == "warning" ? "warning" : "success")">
+            @ViewBag.Mensaje
+        </div>
+    }
+
+    <form method="post" asp-action="PurgarSistema" asp-controller="Cocina">
+        <div class="pedidos-grid">
+            @foreach (var pedido in Model.OrderBy(x => Guid.NewGuid()))
+            {
+                <div class="ticket-card">
+                    <div class="card-header">
+                        <div class="ticket-number">
+                            #@pedido.TicketNumero.ToString().PadLeft(3, '0')
+                        </div>
+                    </div>
+
+                    <div class="ticket-detail">
+                        <strong>ORDEN:</strong>
+                        <div style="margin-top: 6px;">@pedido.DetalleOrden</div>
+                    </div>
+
+                    <div class="ticket-notes">
+                        <strong>NOTAS:</strong> @pedido.NotasCliente
+                    </div>
+
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" name="ticketsSeleccionados" value="@pedido.Id" id="pedido-@pedido.Id">
+                        <label for="pedido-@pedido.Id">
+                            Marcar como SOSPECHOSO
+                        </label>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="button-container">
+            <button type="submit" class="purga-button">
+                PURGAR SISTEMA
+            </button>
+        </div>
+    </form>
+</div>

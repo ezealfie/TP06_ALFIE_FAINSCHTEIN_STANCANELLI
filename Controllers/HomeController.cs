@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TP06.Models;
 
@@ -26,8 +27,12 @@ public class HomeController : Controller
     public IActionResult ComenzarJuego(string nombreJugador, DateTime fechaHora)
     {
         BD bd = new BD();
-        bd.IniciarPartida(new Partidas(nombreJugador, fechaHora));
-        return View();
+        int partidaId = bd.IniciarPartida(new Partidas(nombreJugador, fechaHora));
+        bd.InsertarPedidosParaPartida(partidaId);
+
+        HttpContext.Session.SetString("PartidaId", partidaId.ToString());
+
+        return RedirectToAction("Tablero", "Cocina");
     }
     public IActionResult Privacy()
     {

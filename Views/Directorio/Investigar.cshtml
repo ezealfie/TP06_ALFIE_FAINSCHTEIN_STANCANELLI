@@ -1,0 +1,436 @@
+@model InvestigacionViewModel
+
+@{
+    ViewData["Title"] = "Sala 2 - Investigación de Directorio";
+}
+
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body, html {
+        background: #1a1a1a;
+        color: #fff;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .sala-container {
+        background: #1a1a1a;
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .sala-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding: 20px;
+        background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+        border-bottom: 2px solid #e74c3c;
+    }
+
+    .sala-header h1 {
+        font-size: 2em;
+        margin-bottom: 8px;
+        color: #fff;
+    }
+
+    .sala-header p {
+        color: #bbb;
+        font-size: 0.95em;
+    }
+
+    /* MODAL */
+    .modal {
+        display: flex;
+        position: fixed;
+        z-index: 999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+        padding: 40px;
+        border: 2px solid #e74c3c;
+        border-radius: 8px;
+        max-width: 600px;
+        width: 90%;
+        box-shadow: 0 8px 32px rgba(231, 76, 60, 0.3);
+        text-align: center;
+    }
+
+    .modal-header {
+        font-size: 1.8em;
+        color: #e74c3c;
+        font-weight: 700;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+    }
+
+    .modal-body {
+        color: #ddd;
+        font-size: 1.05em;
+        line-height: 1.8;
+        margin-bottom: 30px;
+    }
+
+    .modal-body strong {
+        color: #f39c12;
+    }
+
+    .modal-button {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        color: #fff;
+        border: 2px solid #a93226;
+        padding: 14px 40px;
+        font-size: 1.05em;
+        font-weight: 700;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .modal-button:hover {
+        background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+        box-shadow: 0 6px 20px rgba(231, 76, 60, 0.5);
+        transform: translateY(-2px);
+    }
+
+    .modal.hidden {
+        display: none;
+    }
+
+    /* CONTENIDO PRINCIPAL */
+    .investigacion-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    @media (max-width: 1200px) {
+        .investigacion-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .panel {
+        background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+        border: 1px solid #444;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .panel-header {
+        background: #e74c3c;
+        color: #fff;
+        padding: 15px 20px;
+        font-weight: 700;
+        font-size: 1.1em;
+        letter-spacing: 1px;
+    }
+
+    .panel-body {
+        padding: 20px;
+        max-height: 500px;
+        overflow-y: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9em;
+    }
+
+    th {
+        background: #333;
+        color: #f39c12;
+        padding: 12px;
+        text-align: left;
+        font-weight: 700;
+        border-bottom: 2px solid #444;
+        text-transform: uppercase;
+        font-size: 0.85em;
+        letter-spacing: 0.5px;
+    }
+
+    td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #333;
+        color: #ddd;
+    }
+
+    tr:hover {
+        background: rgba(231, 76, 60, 0.1);
+    }
+
+    .nivel-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 0.85em;
+    }
+
+    .nivel-2 {
+        background: #e74c3c;
+        color: #fff;
+    }
+
+    .nivel-1 {
+        background: #f39c12;
+        color: #000;
+    }
+
+    .nivel-0 {
+        background: #7f8c8d;
+        color: #fff;
+    }
+
+    /* FORMULARIO */
+    .validacion-form {
+        background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+        border: 2px solid #e74c3c;
+        border-radius: 8px;
+        padding: 30px;
+        text-align: center;
+    }
+
+    .validacion-form h3 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+        color: #e74c3c;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        color: #bbb;
+        font-weight: 600;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        font-size: 0.9em;
+        letter-spacing: 0.5px;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 12px;
+        background: #111;
+        border: 2px solid #444;
+        color: #fff;
+        font-size: 1em;
+        border-radius: 6px;
+        font-family: 'Courier New', monospace;
+        transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #e74c3c;
+        box-shadow: 0 0 10px rgba(231, 76, 60, 0.3);
+    }
+
+    .form-button {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        color: #fff;
+        border: 2px solid #a93226;
+        padding: 14px 50px;
+        font-size: 1.1em;
+        font-weight: 700;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .form-button:hover {
+        background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+        box-shadow: 0 6px 20px rgba(231, 76, 60, 0.5);
+        transform: translateY(-2px);
+    }
+
+    .form-button:active {
+        transform: translateY(0);
+    }
+
+    .error-message {
+        background: rgba(231, 76, 60, 0.2);
+        border: 1px solid #e74c3c;
+        color: #ff9999;
+        padding: 15px;
+        border-radius: 6px;
+        margin-top: 15px;
+        text-align: left;
+    }
+
+    .scanning {
+        color: #f39c12;
+        font-weight: bold;
+        animation: pulse 1.5s infinite;
+    }
+
+    @@keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.6; }
+    }
+
+    /* SCROLLBAR */
+    .panel-body::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .panel-body::-webkit-scrollbar-track {
+        background: #222;
+    }
+
+    .panel-body::-webkit-scrollbar-thumb {
+        background: #e74c3c;
+        border-radius: 4px;
+    }
+
+    .panel-body::-webkit-scrollbar-thumb:hover {
+        background: #c0392b;
+    }
+</style>
+
+<div class="sala-container">
+    <!-- MODAL DE HISTORIA -->
+    <div id="modalhHistory" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                ⚠ FASE 2: IDENTIFICAR AL INFILTRADO
+            </div>
+            <div class="modal-body">
+                Un usuario con <strong>privilegios de Nivel 2</strong> saboteó el sistema a la madrugada. 
+                <br><br>
+                Cruzá los registros de auditoría con el directorio de empleados para encontrar el <strong>legajo del culpable</strong>.
+                <br><br>
+                <em>Busca pistas en los logs: quién accedió y cuándo.</em>
+            </div>
+            <button class="modal-button" onclick="cerrarModal()">Iniciar Escaneo</button>
+        </div>
+    </div>
+
+    <!-- ENCABEZADO -->
+    <div class="sala-header">
+        <h1>SISTEMA DE GESTIÓN DE DIRECTORIO</h1>
+        <p>Auditoría de Seguridad - Investigación de Infiltración</p>
+    </div>
+
+    <!-- PANELES DE DATOS -->
+    <div class="investigacion-grid">
+        <!-- PANEL DE EMPLEADOS -->
+        <div class="panel">
+            <div class="panel-header">📋 DIRECTORIO DE EMPLEADOS</div>
+            <div class="panel-body">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Legajo</th>
+                            <th>Nombre</th>
+                            <th>Rol</th>
+                            <th>Nivel</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var emp in Model.Empleados)
+                        {
+                            <tr>
+                                <td><strong>@emp.Legajo</strong></td>
+                                <td>@emp.Nombre</td>
+                                <td>@emp.NombreRol</td>
+                                <td>
+                                    <span class="nivel-badge nivel-@emp.NivelAcceso">
+                                        @emp.NivelAcceso
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PANEL DE LOGS -->
+        <div class="panel">
+            <div class="panel-header">📊 LOGS DE AUDITORÍA</div>
+            <div class="panel-body">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Hora</th>
+                            <th>ID Empleado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var log in Model.Logs)
+                        {
+                            <tr>
+                                <td>@log.FechaHora.ToString("HH:mm:ss")</td>
+                                <td><strong>@log.EmpleadoId</strong></td>
+                                <td>@log.Accion</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- FORMULARIO DE VALIDACIÓN -->
+    <div class="validacion-form">
+        <h3>VALIDAR CREDENCIAL DE ADMINISTRADOR</h3>
+        
+        @if (ViewBag.Error != null)
+        {
+            <div class="error-message">
+                <strong>❌ ERROR:</strong> @ViewBag.Error
+            </div>
+        }
+
+        <form method="post" asp-action="ValidarSospechoso" asp-controller="Directorio">
+            <div class="form-group">
+                <label class="form-label">Ingresá el legajo del culpable (Supervisor Nivel 2):</label>
+                <input type="text" name="legajo" class="form-input" placeholder="Ej: EMP-001" required>
+            </div>
+
+            <button type="submit" class="form-button">Validar Credencial</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Mostrar modal automáticamente al cargar
+    window.addEventListener('DOMContentLoaded', function() {
+        mostrarModal();
+    });
+
+    function cerrarModal() {
+        const modal = document.getElementById('modalhHistory');
+        modal.classList.add('hidden');
+    }
+
+    function mostrarModal() {
+        const modal = document.getElementById('modalhHistory');
+        modal.classList.remove('hidden');
+    }
+
+    // Cerrar modal si se presiona ESC (opcional)
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            cerrarModal();
+        }
+    });
+</script>
