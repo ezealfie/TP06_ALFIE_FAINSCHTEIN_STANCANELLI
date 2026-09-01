@@ -36,22 +36,42 @@ public class CocinaController : Controller
 
         if (ticketsSeleccionados == null || ticketsSeleccionados.Length == 0)
         {
-            ViewBag.Mensaje = "Seleccioná al menos un pedido.";
+            ViewBag.Mensaje = "Seleccioná al menos un pedido para purgar.";
             ViewBag.TipoMensaje = "warning";
             return View("Tablero", bd.ObtenerPedidosPendientes(partidaId));
         }
 
-        if (bd.TodosLosPedidosSonFalsos(partidaId, ticketsSeleccionados))
+        // Validar que TODOS los seleccionados sean falsos
+        if (!bd.TodosLosPedidosSonFalsos(partidaId, ticketsSeleccionados))
         {
-            bd.CancelarPedidos(partidaId, ticketsSeleccionados);
-            int cantidad = ticketsSeleccionados.Length;
-            ViewBag.Mensaje = $"Éxito: se eliminaron {cantidad} pedido{(cantidad != 1 ? "s" : "")} falso{(cantidad != 1 ? "s" : "")}. Sistema parcialmente recuperado.";
+            ViewBag.Mensaje = "❌ Penalización: seleccionaste un pedido real. El sistema está más comprometido.";
+            ViewBag.TipoMensaje = "danger";
+            return View("Tablero", bd.ObtenerPedidosPendientes(partidaId));
+        }
+
+        // ✅ Los seleccionados son todos falsos: cancelarlos
+        bd.CancelarPedidos(partidaId, ticketsSeleccionados);
+        
+        int cantidad = ticketsSeleccionados.Length;
+        
+        // Verificar si aún quedan pedidos falsos pendientes
+        int falsosPendientes = bd.ContarPedidosFalsos(partidaId);
+        
+        if (falsosPendientes == 0)
+        {
+            // ✅ NO HAY MÁS FALSOS: Sistema completamente purificado
+            bd.MarcarSalaResuelta(partidaId, 1);
+            ViewBag.Mensaje = "🔥 ¡SISTEMA COMPLETAMENTE PURIFICADO! Los pedidos saboteados han sido eliminados. ¡Avanzando a la siguiente sala!";
             ViewBag.TipoMensaje = "success";
+            
+            // Redirigir automáticamente después de 2 segundos (con JS)
+            return RedirectToAction("Investigar", "Directorio");
         }
         else
         {
-            ViewBag.Mensaje = "Penalización: seleccionaste al menos un pedido real.";
-            ViewBag.TipoMensaje = "danger";
+            // Aún hay falsos: mostrar progreso sin números
+            ViewBag.Mensaje = $"✓ Operación exitosa: {cantidad} pedido{(cantidad != 1 ? "s" : "")} purgado{(cantidad != 1 ? "s" : "")}. Continúa eliminando los sabotajes...";
+            ViewBag.TipoMensaje = "success";
         }
 
         return View("Tablero", bd.ObtenerPedidosPendientes(partidaId));

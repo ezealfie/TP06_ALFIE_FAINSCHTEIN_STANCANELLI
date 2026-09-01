@@ -1,8 +1,201 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "La Cocina Maldita - Escape Room";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+        height: 100%;
+        background: #0a0a0a;
+        color: #fff;
+        font-family: 'Georgia', serif;
+        overflow-x: hidden;
+    }
+
+    .escape-room-container {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #0f0f0f 0%, #1a0a05 100%);
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+    }
+
+    .escape-room-container::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            repeating-linear-gradient(
+                0deg,
+                rgba(255, 69, 0, 0.03) 0px,
+                rgba(255, 69, 0, 0.03) 2px,
+                transparent 2px,
+                transparent 4px
+            );
+        pointer-events: none;
+        z-index: 1;
+        background: linear-gradient(135deg, #ff006e, #00d9ff, #ffbe0b);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 
+            0 0 20px rgba(255, 0, 110, 0.5),
+            0 0 40px rgba(0, 217, 255, 0.3);
+        letter-spacing: 3px;
+    }
+
+    .subtitle {
+        font-size: 1.3em;
+        color: #00d9ff;
+        margin-bottom: 20px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        opacity: 1;
+    }
+
+    .description {
+        font-size: 1.1em;
+        color: #bbb;
+        margin: 30px 0;
+        line-height: 1.8;
+        border-left: 3px solid #ff006e;
+        padding-left: 20px;
+    }
+
+    .cta-section {
+        margin-top: 40px;
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-escape {
+        padding: 18px 45px;
+        font-size: 1.1em;
+        font-family: 'Courier New', monospace;
+        font-weight: bold;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        border: 2px solid;
+        background: linear-gradient(135deg, rgba(255, 0, 110, 0.1) 0%, rgba(0, 217, 255, 0.1) 100%);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-play {
+        border-color: #00d9ff;
+        color: #00d9ff;
+        box-shadow: 
+            0 0 10px rgba(0, 217, 255, 0.3),
+            inset 0 0 10px rgba(0, 217, 255, 0.1);
+    }
+
+    .btn-play:hover {
+        border-color: #00d9ff;
+        color: #fff;
+        background: linear-gradient(135deg, rgba(0, 217, 255, 0.3) 0%, rgba(0, 217, 255, 0.1) 100%);
+        box-shadow: 
+            0 0 30px rgba(0, 217, 255, 0.8),
+            inset 0 0 20px rgba(0, 217, 255, 0.3);
+        transform: translate(0, -3px);
+    }
+
+    .btn-info {
+        border-color: #ffbe0b;
+        color: #ffbe0b;
+        box-shadow: 
+            0 0 10px rgba(255, 190, 11, 0.3),
+            inset 0 0 10px rgba(255, 190, 11, 0.1);
+    }
+
+    .btn-info:hover {
+        border-color: #ffbe0b;
+        color: #fff;
+        background: linear-gradient(135deg, rgba(255, 190, 11, 0.3) 0%, rgba(255, 190, 11, 0.1) 100%);
+        box-shadow: 
+            0 0 30px rgba(255, 190, 11, 0.8),
+            inset 0 0 20px rgba(255, 190, 11, 0.3);
+        transform: translate(0, -3px);
+    }
+
+    .stats {
+        margin-top: 50px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        padding-top: 30px;
+        border-top: 1px solid rgba(255, 0, 110, 0.3);
+    }
+
+    .stat-item {
+        padding: 15px;
+        background: rgba(0, 217, 255, 0.05);
+        border: 1px solid rgba(0, 217, 255, 0.2);
+        border-radius: 4px;
+    }
+
+    .stat-number {
+        font-size: 2em;
+        color: #ff006e;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .stat-label {
+        font-size: 0.9em;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+
+</style>
+
+<div class="escape-room-container">
+    <div class="neon-border">
+        <h1 class="header-title">🔥 LA COCINA MALDITA 🔥</h1>
+        
+        <div class="subtitle">[ SALA DE ESCAPE ]</div>
+        
+        <div class="description">
+            <strong>ADVERTENCIA:</strong> El restaurante "La Cocina Maldita" ha cerrado bajo circunstancias misteriosas.
+            Se rumora que un sabotaje interno llevó al colapso de las operaciones. 
+            Tu misión: Investigar, resolver y escapar antes de que sea demasiado tarde.
+        </div>
+
+        <div class="cta-section">
+            <a href="@Url.Action("Inicio", "Home")" class="btn-escape btn-play">
+                ▶ INICIAR PARTIDA
+            </a>
+            <a href="@Url.Action("Privacy", "Home")" class="btn-escape btn-info">
+                ℹ INSTRUCCIONES
+            </a>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Salas</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Misterios</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">60:00</div>
+                <div class="stat-label">Tiempo Límite</div>
+            </div>
+        </div>
+    </div>
 </div>

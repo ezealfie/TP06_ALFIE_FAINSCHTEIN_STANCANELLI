@@ -52,6 +52,20 @@ public class BD
         }
     }
 
+    public int ContarPedidosFalsos(int partidaId)
+    {
+        const string sql = @"SELECT COUNT(1)
+                             FROM Pedidos
+                             WHERE PartidaId = @PartidaId
+                               AND EsFalso = 1
+                               AND Estado = 'Pendiente'";
+
+        using (SqlConnection conexion = new SqlConnection(_connectionString))
+        {
+            return conexion.QueryFirstOrDefault<int>(sql, new { PartidaId = partidaId });
+        }
+    }
+
     public int CancelarPedidos(int partidaId, int[] ticketsSeleccionados)
     {
         const string sql = @"UPDATE Pedidos
@@ -99,6 +113,84 @@ public class BD
                     pedido.Estado
                 });
             }
+        }
+    }
+
+    public bool MarcarSalaResuelta(int partidaId, int salaId)
+    {
+        const string sqlCheck = @"SELECT COUNT(1) FROM ProgresoSala 
+                                 WHERE PartidaId = @PartidaId AND SalaId = @SalaId";
+        
+        using (SqlConnection conexion = new SqlConnection(_connectionString))
+        {
+            int existe = conexion.QueryFirstOrDefault<int>(sqlCheck, 
+                new { PartidaId = partidaId, SalaId = salaId });
+
+            if (existe > 0)
+            {
+                const string sqlUpdate = @"UPDATE ProgresoSala 
+                                          SET Resuelto = 1, FechaAcceso = GETDATE() 
+                                          WHERE PartidaId = @PartidaId AND SalaId = @SalaId";
+                conexion.Execute(sqlUpdate, new { PartidaId = partidaId, SalaId = salaId });
+            }
+            else
+            {
+                const string sqlInsert = @"INSERT INTO ProgresoSala 
+                                          (PartidaId, SalaId, Intentos, Resuelto, FechaAcceso)
+                                          VALUES (@PartidaId, @SalaId, 1, 1, GETDATE())";
+                conexion.Execute(sqlInsert, new { PartidaId = partidaId, SalaId = salaId });
+            }
+
+            return true;
+        }
+    }
+
+    public bool VerificarSalaResuelta(int partidaId, int salaId)
+    {
+        const string sql = @"SELECT COUNT(1) FROM ProgresoSala 
+                            WHERE PartidaId = @PartidaId AND SalaId = @SalaId AND Resuelto = 1";
+
+        using (SqlConnection conexion = new SqlConnection(_connectionString))
+        {
+            int resultado = conexion.QueryFirstOrDefault<int>(sql, 
+                new { PartidaId = partidaId, SalaId = salaId });
+            return resultado > 0;
+        }
+    }
+
+    public bool VerificarSupervisor(string legajo)
+    {
+        const string sql = @"SELECT COUNT(1) FROM Empleados e
+                             INNER JOIN Jerarquias j ON e.JerarquiaId = j.Id
+                             WHERE e.Legajo = @Legajo AND j.NombreRol = 'Supervisor' AND j.NivelAcceso = 2";
+
+        using (SqlConnection conexion = new SqlConnection(_connectionString))
+        {
+            int resultado = conexion.QueryFirstOrDefault<int>(sql, new { Legajo = legajo });
+            return resultado > 0;
+        }
+    }
+
+    public List<EmpleadoConJerarquia> ObtenerEmpleadosConJerarquia()
+    {
+        const string sql = @"SELECT e.Id, e.Legajo, e.Nombre, j.NombreRol, j.NivelAcceso
+                             FROM Empleados e
+                             INNER JOIN Jerarquias j ON e.JerarquiaId = j.Id
+                             ORDER BY e.Legajo";
+
+        using (SqlConnection conexion = new SqlConnection(_connectionString))
+        {
+            return conexion.Query<EmpleadoConJerarquia>(sql).ToList();
+        }
+    }
+
+    public List<LogsAuditoria> ObtenerLogsAuditoria()
+    {
+        const string sql = @"SELECT * FROM LogsAuditoria ORDER BY FechaHora DESC";
+
+        using (SqlConnection conexion = new SqlConnection(_connectionString))
+        {
+            return conexion.Query<LogsAuditoria>(sql).ToList();
         }
     }
 }

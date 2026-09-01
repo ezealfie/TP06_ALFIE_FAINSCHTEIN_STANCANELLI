@@ -1,6 +1,323 @@
 @{
-    ViewData["Title"] = "Inicio";
+    ViewData["Title"] = "La Cocina Maldita - Sala de Escape";
 }
+
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body, html {
+        background: #0a0a0a;
+        color: #fff;
+        font-family: 'Segoe UI', 'Trebuchet MS', sans-serif;
+        overflow-x: hidden;
+    }
+
+    .escape-hero {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        position: relative;
+        min-height: 100vh;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .escape-hero::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            radial-gradient(circle at 20% 50%, rgba(220, 38, 38, 0.08) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(34, 197, 94, 0.08) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .escape-hero::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: repeating-linear-gradient(
+            0deg,
+            rgba(139, 69, 19, 0.02) 0px,
+            rgba(139, 69, 19, 0.02) 1px,
+            transparent 1px,
+            transparent 2px
+        );
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    .container {
+        position: relative;
+        z-index: 3;
+    }
+
+    .escape-card {
+        background: rgba(30, 30, 46, 0.95);
+        border: 1px solid rgba(139, 69, 19, 0.5);
+        border-radius: 16px;
+        box-shadow: 
+            0 20px 60px rgba(0, 0, 0, 0.6),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        overflow: hidden;
+        position: relative;
+        backdrop-filter: blur(10px);
+        transition: all 0.6s ease;
+    }
+
+    .escape-card:hover {
+        box-shadow: 
+            0 25px 80px rgba(220, 38, 38, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        border-color: rgba(220, 38, 38, 0.6);
+    }
+
+    .escape-info {
+        background: linear-gradient(135deg, rgba(139, 69, 19, 0.3) 0%, rgba(220, 38, 38, 0.15) 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .escape-info::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -25%;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(220, 38, 38, 0.15) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: mysteryLight 8s ease-in-out infinite;
+    }
+
+    @@keyframes mysteryLight {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        50% { transform: translate(30px, 30px) scale(1.1); }
+    }
+
+    .escape-info h1 {
+        color: #fef08a;
+        text-shadow: 
+            0 0 20px rgba(220, 38, 38, 0.8),
+            0 2px 10px rgba(0, 0, 0, 0.5);
+        position: relative;
+        z-index: 1;
+        font-weight: 800;
+        letter-spacing: 2px;
+        font-size: 3.5rem;
+    }
+
+    .escape-info p {
+        color: #d1d5db;
+        line-height: 1.9;
+        position: relative;
+        z-index: 1;
+        font-size: 1.1rem;
+    }
+
+    .badge {
+        background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%) !important;
+        border: 1px solid rgba(220, 38, 38, 0.8);
+        box-shadow: 0 0 20px rgba(220, 38, 38, 0.6);
+        animation: badgePulse 2.5s ease-in-out infinite;
+        font-size: 0.9rem;
+        padding: 0.6rem 1.2rem !important;
+    }
+
+    @@keyframes badgePulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.08); opacity: 0.85; }
+    }
+
+    .escape-features {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin-top: 30px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .feature-item {
+        padding: 15px 18px;
+        border-left: 4px solid #dc2626;
+        background: rgba(220, 38, 38, 0.08);
+        border-radius: 8px;
+        color: #f3e8e8;
+        font-weight: 600;
+        letter-spacing: 0.8px;
+        transition: all 0.4s ease;
+        position: relative;
+        font-size: 1.05rem;
+    }
+
+    .feature-item::before {
+        content: '🔥';
+        margin-right: 12px;
+        font-size: 1.2rem;
+    }
+
+    .feature-item:hover {
+        background: rgba(220, 38, 38, 0.15);
+        box-shadow: 0 0 25px rgba(220, 38, 38, 0.5);
+        transform: translateX(8px);
+        border-left-color: #fef08a;
+    }
+
+    .escape-form {
+        position: relative;
+        z-index: 1;
+    }
+
+    .form-label {
+        color: #fef08a;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        font-size: 0.95em;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .form-control {
+        background: rgba(0, 0, 0, 0.6) !important;
+        border: 2px solid rgba(220, 38, 38, 0.3) !important;
+        color: #fff !important;
+        border-radius: 10px !important;
+        transition: all 0.4s ease;
+        box-shadow: 0 0 15px rgba(220, 38, 38, 0.1);
+        padding: 14px 16px !important;
+        font-size: 1.05rem;
+    }
+
+    .form-control:focus {
+        background: rgba(220, 38, 38, 0.1) !important;
+        border-color: #dc2626 !important;
+        box-shadow: 0 0 30px rgba(220, 38, 38, 0.6), inset 0 0 15px rgba(220, 38, 38, 0.15) !important;
+        color: #fff !important;
+    }
+
+    .form-control::placeholder {
+        color: #9ca3af;
+    }
+
+    .btn-dark {
+        background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%) !important;
+        border: 2px solid #fef08a !important;
+        color: #fff !important;
+        font-weight: 800;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border-radius: 10px !important;
+        transition: all 0.4s ease;
+        box-shadow: 0 0 25px rgba(220, 38, 38, 0.5);
+        position: relative;
+        overflow: hidden;
+        font-size: 1.1rem;
+        padding: 16px 20px !important;
+    }
+
+    .btn-dark::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: rgba(254, 240, 138, 0.2);
+        transition: left 0.4s ease;
+    }
+
+    .btn-dark:hover {
+        background: linear-gradient(135deg, #991b1b 0%, #dc2626 100%) !important;
+        box-shadow: 0 0 50px rgba(220, 38, 38, 1), inset 0 0 20px rgba(254, 240, 138, 0.2);
+        transform: translateY(-4px);
+        border-color: #fff !important;
+    }
+
+    .btn-dark:hover::before {
+        left: 100%;
+    }
+
+    .btn-dark:active {
+        transform: translateY(-2px);
+    }
+
+    .py-5 {
+        padding-top: 3rem !important;
+        padding-bottom: 3rem !important;
+    }
+
+    .min-vh-75 {
+        min-height: 75vh;
+    }
+
+    .subtitle-welcome {
+        color: #fbbf24;
+        font-size: 1.3rem;
+        letter-spacing: 1px;
+        margin-bottom: 15px;
+        font-weight: 600;
+        text-transform: uppercase;
+        animation: fadeInUp 1s ease;
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .escape-card {
+        animation: slideIn 0.8s ease;
+    }
+
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@media (max-width: 992px) {
+        .escape-info {
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .escape-info h1 {
+            font-size: 2.5rem;
+        }
+
+        .escape-form {
+            border-radius: 0 0 16px 16px;
+        }
+    }
+
+    .form-divider {
+        color: #fbbf24;
+        font-weight: 700;
+        margin: 20px 0;
+        padding: 20px 0;
+        border-top: 2px solid rgba(220, 38, 38, 0.3);
+        border-bottom: 2px solid rgba(220, 38, 38, 0.3);
+        letter-spacing: 1px;
+    }
+</style>
 
 <section class="escape-hero py-5">
     <div class="container">
@@ -9,35 +326,44 @@
                 <div class="escape-card shadow-lg overflow-hidden">
                     <div class="row g-0">
                         <div class="col-lg-6 escape-info p-5 text-white d-flex flex-column justify-content-center">
-                            <span class="badge rounded-pill bg-warning text-dark mb-3 align-self-start">Sala de escape</span>
-                            <h1 class="display-5 fw-bold mb-3">Bienvenidos a la sala de escape</h1>
+                            <span class="badge rounded-pill bg-danger text-white mb-3 align-self-start">🍽️ LA COCINA MALDITA</span>
+                            <div class="subtitle-welcome">Bienvenido a</div>
+                            <h1 class="display-5 fw-bold mb-4">EL MISTERIO CULINARIO</h1>
                             <p class="lead mb-4">
-                                Ingresá tu nombre, reuní a tu equipo y prepárate para resolver enigmas,
-                                descubrir pistas y escapar antes de que se acabe el tiempo.
+                                Los secretos de la cocina no revelan sus enigmas a cualquiera. 
+                                Demuestra tu ingenio, descifra las pistas ocultas entre ingredientes y utensilios, 
+                                y escapa antes de que se cierren las puertas.
                             </p>
                             <div class="escape-features">
-                                <div class="feature-item">Pistas ocultas</div>
-                                <div class="feature-item">Desafíos mentales</div>
-                                <div class="feature-item">Trabajo en equipo</div>
+                                <div class="feature-item">Acertijos culinarios oscuros</div>
+                                <div class="feature-item">Desafíos mentales inmersivos</div>
+                                <div class="feature-item">Atmósfera de suspenso gastronómico</div>
+                                <div class="feature-item">Controlarás tu destino</div>
                             </div>
                         </div>
 
-                        <div class="col-lg-6 bg-white p-5">
-                            <h2 class="h3 fw-semibold mb-3">Comenzar aventura</h2>
-                            <p class="text-muted mb-4">Completá tus datos para iniciar la partida.</p>
+                        <div class="col-lg-6 p-5" style="background: linear-gradient(135deg, rgba(15, 15, 30, 0.98) 0%, rgba(25, 15, 35, 0.98) 100%);">
+                            <h2 class="h3 fw-bold mb-2" style="color: #fbbf24; letter-spacing: 1px; text-transform: uppercase;">🔓 Inicia Tu Juego</h2>
+                            <p class="text-muted mb-5" style="color: #adb5bd; font-size: 0.95rem;">Ingresa tus datos y adéntrate en la aventura que te espera</p>
 
                             <form method="post" action="@Url.Action("ComenzarJuego", "Home")" class="escape-form">
                                 <div class="mb-4">
-                                    <label for="nombreJugador" class="form-label fw-semibold">Nombre del jugador</label>
-                                    <input type="text" class="form-control form-control-lg" id="nombreJugador" name="nombreJugador" required placeholder="Por ejemplo: Sofía">
+                                    <label for="nombreJugador" class="form-label fw-semibold">Tu nombre de jugador</label>
+                                    <input type="text" class="form-control form-control-lg" id="nombreJugador" name="nombreJugador" required placeholder="Ej: Sofía, Marco, Ana...">
                                 </div>
 
                                 <input type="hidden" name="fechaHora" value="@DateTime.Now">
 
                                 <button type="submit" class="btn btn-dark btn-lg w-100 py-3">
-                                    Iniciar la escape room
+                                    🔥 Entrar al Misterio
                                 </button>
                             </form>
+
+                            <div class="form-divider">⏱️ 60 MINUTOS</div>
+
+                            <div style="text-align: center; color: #9ca3af; font-size: 0.9rem; margin-top: 15px;">
+                                <p>¿Podrás escapar a tiempo?</p>
+                            </div>
                         </div>
                     </div>
                 </div>
