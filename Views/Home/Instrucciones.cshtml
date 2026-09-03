@@ -1,0 +1,93 @@
+@{
+    ViewData["Title"] = "Instrucciones";
+}
+
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html {
+        background: #0a0a0a;
+        color: #fff;
+        font-family: 'Segoe UI', sans-serif;
+    }
+    .instrucciones-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #120b18 0%, #0a0a0a 100%);
+        padding: 40px 20px;
+    }
+    .instrucciones-box {
+        max-width: 900px;
+        width: 100%;
+        background: rgba(20, 20, 30, 0.95);
+        border: 2px solid #ff006e;
+        box-shadow: 0 0 25px rgba(255, 0, 110, 0.35);
+        padding: 30px;
+    }
+    .instrucciones-box h1 {
+        color: #ff006e;
+        font-weight: 900;
+        letter-spacing: 2px;
+        margin-bottom: 20px;
+    }
+    .instrucciones-box p, .instrucciones-box li {
+        color: #e5e7eb;
+        line-height: 1.8;
+        font-size: 1.05rem;
+    }
+    .instrucciones-box ul {
+        margin-top: 20px;
+        padding-left: 22px;
+    }
+    .instrucciones-box .cta {
+        margin-top: 25px;
+        text-align: center;
+    }
+    .instrucciones-box input {
+        width: 100%;
+        max-width: 420px;
+        margin: 0 auto 16px auto;
+        display: block;
+        padding: 12px 14px;
+        background: #0d0d0d;
+        border: 2px solid #00d9ff;
+        color: #fff;
+        font-size: 1rem;
+    }
+    .instrucciones-box button {
+        background: linear-gradient(135deg, #ff006e 0%, #c5004d 100%);
+        color: #fff;
+        border: none;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        padding: 14px 30px;
+        text-transform: uppercase;
+        box-shadow: 0 0 18px rgba(255, 0, 110, 0.35);
+    }
+</style>
+
+<div class="instrucciones-container">
+    <div class="instrucciones-box">
+        <h1>INSTRUCCIONES DEL ATAQUE</h1>
+        <p>
+            Tenés 10 minutos para detener el ataque. Cada error quedará registrado en tu legajo. Suerte.
+        </p>
+        <ul>
+            <li>La misión principal es restaurar el sistema sin perder tiempo.</li>
+            <li>El juego se divide en salas con acertijos y verificación de permisos.</li>
+            <li>Los errores se acumulan y afectan tu desempeño final.</li>
+            <li>Si el cronómetro llega a cero, el sistema queda comprometido.</li>
+        </ul>
+
+        <form method="post" asp-action="ComenzarJuego" asp-controller="Home">
+            <div class="mb-3">
+                <input type="text" name="nombreJugador" id="nombreJugador" placeholder="Ingresá tu nombre de operador" required />
+            </div>
+            <input type="hidden" name="fechaHora" value="@DateTime.Now" />
+            <div class="cta">
+                <button type="submit">Iniciar misión</button>
+            </div>
+        </form>
+    </div>
+</div>

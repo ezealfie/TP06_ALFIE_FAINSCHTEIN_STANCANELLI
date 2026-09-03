@@ -186,11 +186,142 @@ public class BD
 
     public List<LogsAuditoria> ObtenerLogsAuditoria()
     {
-        const string sql = @"SELECT * FROM LogsAuditoria ORDER BY FechaHora DESC";
+        const string sql = @"SELECT l.Id, l.EmpleadoId, e.Legajo, l.Accion, l.FechaHora
+                             FROM LogsAuditoria l
+                             INNER JOIN Empleados e ON e.Id = l.EmpleadoId
+                             ORDER BY l.FechaHora DESC";
 
         using (SqlConnection conexion = new SqlConnection(_connectionString))
         {
             return conexion.Query<LogsAuditoria>(sql).ToList();
+        }
+    }
+
+    public List<Inventario> ObtenerInventarioPorPartida(int partidaId)
+    {
+        const string sql = @"SELECT Id, PartidaId, Insumo, CantidadActual, EnergiaSabotaje
+                             FROM Inventario
+                             WHERE PartidaId = @PartidaId
+                             ORDER BY Id";
+
+        using (SqlConnection conexion = new SqlConnection(_connectionString))
+        {
+            return conexion.Query<Inventario>(sql, new { PartidaId = partidaId }).ToList();
+        }
+    }
+
+    public int ObtenerCantidadInsumoPorPartida(int partidaId, string insumo)
+    {
+        const string sql = @"SELECT TOP 1 CantidadActual
+                             FROM Inventario
+                             WHERE PartidaId = @PartidaId AND Insumo = @Insumo";
+
+        using (SqlConnection conexion = new SqlConnection(_connectionString))
+        {
+            return conexion.QueryFirstOrDefault<int>(sql, new { PartidaId = partidaId, Insumo = insumo });
+        }
+    }
+
+    public int ActualizarCantidadInsumo(int partidaId, string insumo, int nuevaCantidad)
+    {
+        const string sql = @"UPDATE Inventario
+                             SET CantidadActual = @NuevaCantidad
+                             WHERE PartidaId = @PartidaId AND Insumo = @Insumo";
+
+        using (SqlConnection conexion = new SqlConnection(_connectionString))
+        {
+            return conexion.Execute(sql, new { PartidaId = partidaId, Insumo = insumo, NuevaCantidad = nuevaCantidad });
+        }
+    }
+
+    public void InsertarInventarioParaPartida(int partidaId)
+    {
+        List<Inventario> inventario = new List<Inventario>
+        {
+            new Inventario { PartidaId = partidaId, Insumo = "Pan", CantidadActual = 800, EnergiaSabotaje = 0.25 },
+            new Inventario { PartidaId = partidaId, Insumo = "Medallon", CantidadActual = 400, EnergiaSabotaje = 0.35 },
+            new Inventario { PartidaId = partidaId, Insumo = "Cheddar", CantidadActual = 99999, EnergiaSabotaje = 0.20 }
+        };
+
+        const string sql = @"INSERT INTO Inventario (PartidaId, Insumo, CantidadActual, EnergiaSabotaje)
+                             VALUES (@PartidaId, @Insumo, @CantidadActual, @EnergiaSabotaje)";
+
+        using (SqlConnection conexion = new SqlConnection(_connectionString))
+        {
+            foreach (Inventario item in inventario)
+            {
+                conexion.Execute(sql, new
+                {
+                    item.PartidaId,
+                    item.Insumo,
+                    item.CantidadActual,
+                    item.EnergiaSabotaje
+                });
+            }
+        }
+    }
+
+    public DateTime? ObtenerFechaInicioPartida(int partidaId)
+    {
+        const string sql = @"SELECT TOP 1 FechaInicio
+                             FROM Partidas
+                             WHERE Id = @PartidaId";
+
+        using (SqlConnection conexion = new SqlConnection(_connectionString))
+        {
+            return conexion.QueryFirstOrDefault<DateTime?>(sql, new { PartidaId = partidaId });
+        }
+    }
+
+    public void SumarError(int partidaId)
+    {
+        const string sql = @"UPDATE Partidas
+                             SET ErroresCometidos = ISNULL(ErroresCometidos, 0) + 1
+                             WHERE Id = @PartidaId";
+
+        using (SqlConnection conexion = new SqlConnection(_connectionString))
+        {
+            conexion.Execute(sql, new { PartidaId = partidaId });
+        }
+    }
+
+    public void MarcarFechaFin(int partidaId)
+    {
+        const string sql = @"UPDATE Partidas
+                             SET FechaFin = GETDATE()
+                             WHERE Id = @PartidaId";
+
+        using (SqlConnection conexion = new SqlConnection(_connectionString))
+        {
+            conexion.Execute(sql, new { PartidaId = partidaId });
+        }
+    }
+
+    public Partidas ObtenerPartidaPorId(int partidaId)
+    {
+        const string sql = @"SELECT Id, NombreParticipante, FechaInicio, FechaFin, ErroresCometidos
+                             FROM Partidas
+                             WHERE Id = @PartidaId";
+
+        using (SqlConnection conexion = new SqlConnection(_connectionString))
+        {
+            return conexion.QueryFirstOrDefault<Partidas>(sql, new { PartidaId = partidaId });
+        }
+    }
+
+    public List<PartidaRanking> ObtenerRankingTop10()
+    {
+        const string sql = @"SELECT TOP 10
+                             NombreParticipante,
+                             ErroresCometidos,
+                             DATEDIFF(SECOND, FechaInicio, FechaFin) AS TiempoTotalSegundos
+                             FROM Partidas
+                             WHERE FechaFin IS NOT NULL
+                             ORDER BY TiempoTotalSegundos ASC, ErroresCometidos ASC";
+
+        using (SqlConnection conexion = new SqlConnection(_connectionString))
+        {
+            return conexion.Query<PartidaRanking>(sql).ToList();
         }
     }
 }

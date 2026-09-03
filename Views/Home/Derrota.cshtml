@@ -1,0 +1,58 @@
+@{
+    ViewData["Title"] = "Derrota";
+}
+
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html {
+        background: #090909;
+        color: #fff;
+        font-family: 'Courier New', monospace;
+    }
+    .derrota-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle, rgba(255, 0, 85, 0.12) 0%, rgba(9, 9, 9, 1) 60%);
+        padding: 30px;
+    }
+    .derrota-box {
+        max-width: 800px;
+        width: 100%;
+        text-align: center;
+        border: 3px solid #ff0055;
+        background: rgba(20, 10, 16, 0.98);
+        padding: 50px 30px;
+        box-shadow: 0 0 40px rgba(255, 0, 85, 0.5);
+    }
+    .derrota-box h1 {
+        color: #ff0055;
+        font-size: 2.6em;
+        letter-spacing: 3px;
+        margin-bottom: 20px;
+    }
+    .derrota-box p {
+        color: #ffd6e4;
+        font-size: 1.1em;
+        line-height: 1.8;
+    }
+    .derrota-box a {
+        display: inline-block;
+        margin-top: 26px;
+        padding: 12px 24px;
+        background: #ff0055;
+        color: #fff;
+        text-decoration: none;
+        font-weight: 900;
+        letter-spacing: 1px;
+    }
+</style>
+
+<div class="derrota-container">
+    <div class="derrota-box">
+        <h1>SISTEMA COMPROMETIDO</h1>
+        <p>El tiempo se agotó. La orden de compra automática se ejecutó y la cocina quedó fuera de control.</p>
+        <a asp-controller="Home" asp-action="Instrucciones">Intentar otra vez</a>
+    </div>
+</div>

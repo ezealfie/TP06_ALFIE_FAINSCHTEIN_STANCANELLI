@@ -1,5 +1,5 @@
 @{
-    ViewData["Title"] = "La Cocina Maldita - Sala de Escape";
+    ViewData["Title"] = "Escape de la Hamburguesería - Sala de Escape";
 }
 
 <style>
@@ -326,43 +326,43 @@
                 <div class="escape-card shadow-lg overflow-hidden">
                     <div class="row g-0">
                         <div class="col-lg-6 escape-info p-5 text-white d-flex flex-column justify-content-center">
-                            <span class="badge rounded-pill bg-danger text-white mb-3 align-self-start">🍽️ LA COCINA MALDITA</span>
+                            <span class="badge rounded-pill bg-danger text-white mb-3 align-self-start">🍽️ ESCAPE DE LA HAMBURGUESERÍA</span>
                             <div class="subtitle-welcome">Bienvenido a</div>
-                            <h1 class="display-5 fw-bold mb-4">EL MISTERIO CULINARIO</h1>
+                            <h1 class="display-5 fw-bold mb-4">EL ATAQUE AL SISTEMA</h1>
                             <p class="lead mb-4">
-                                Los secretos de la cocina no revelan sus enigmas a cualquiera. 
-                                Demuestra tu ingenio, descifra las pistas ocultas entre ingredientes y utensilios, 
-                                y escapa antes de que se cierren las puertas.
+                                La hamburguesería activó un protocolo de emergencia después de detectar un sabotaje interno.
+                                El tablero de cocina está infectado, el directorio fue manipulado y el inventario quedó fuera de control.
+                                Tu tarea es avanzar por las salas, corregir cada pista y restaurar la operación antes de que el sistema se autodestruya.
                             </p>
                             <div class="escape-features">
-                                <div class="feature-item">Acertijos culinarios oscuros</div>
-                                <div class="feature-item">Desafíos mentales inmersivos</div>
-                                <div class="feature-item">Atmósfera de suspenso gastronómico</div>
-                                <div class="feature-item">Controlarás tu destino</div>
+                                <div class="feature-item">Sala 1: purgar pedidos infectados</div>
+                                <div class="feature-item">Sala 2: identificar al infiltrado</div>
+                                <div class="feature-item">Sala 3: reparar el inventario saboteado</div>
+                                <div class="feature-item">10 minutos para evitar la derrota</div>
                             </div>
                         </div>
 
                         <div class="col-lg-6 p-5" style="background: linear-gradient(135deg, rgba(15, 15, 30, 0.98) 0%, rgba(25, 15, 35, 0.98) 100%);">
                             <h2 class="h3 fw-bold mb-2" style="color: #fbbf24; letter-spacing: 1px; text-transform: uppercase;">🔓 Inicia Tu Juego</h2>
-                            <p class="text-muted mb-5" style="color: #adb5bd; font-size: 0.95rem;">Ingresa tus datos y adéntrate en la aventura que te espera</p>
+                            <p class="text-muted mb-5" style="color: #adb5bd; font-size: 0.95rem;">Ingresá tu nombre para que el sistema registre tu legajo de operador y empiece la cuenta regresiva.</p>
 
                             <form method="post" action="@Url.Action("ComenzarJuego", "Home")" class="escape-form">
                                 <div class="mb-4">
-                                    <label for="nombreJugador" class="form-label fw-semibold">Tu nombre de jugador</label>
+                                    <label for="nombreJugador" class="form-label fw-semibold">Nombre del operador</label>
                                     <input type="text" class="form-control form-control-lg" id="nombreJugador" name="nombreJugador" required placeholder="Ej: Sofía, Marco, Ana...">
                                 </div>
 
                                 <input type="hidden" name="fechaHora" value="@DateTime.Now">
 
                                 <button type="submit" class="btn btn-dark btn-lg w-100 py-3">
-                                    🔥 Entrar al Misterio
+                                    🔥 Ingresar al Sistema
                                 </button>
                             </form>
 
-                            <div class="form-divider">⏱️ 60 MINUTOS</div>
+                            <div class="form-divider">⏱️ 10 MINUTOS</div>
 
                             <div style="text-align: center; color: #9ca3af; font-size: 0.9rem; margin-top: 15px;">
-                                <p>¿Podrás escapar a tiempo?</p>
+                                <p>El tiempo empieza cuando ingresás. Cada error suma al legajo.</p>
                             </div>
                         </div>
                     </div>

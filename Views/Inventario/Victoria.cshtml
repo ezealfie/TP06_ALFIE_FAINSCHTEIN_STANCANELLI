@@ -1,0 +1,159 @@
+@model VictoriaViewModel
+
+@{
+    ViewData["Title"] = "Victoria";
+    var tiempoTotal = Model.PartidaActual.FechaFin.HasValue
+        ? (Model.PartidaActual.FechaFin.Value - Model.PartidaActual.FechaInicio)
+        : TimeSpan.Zero;
+}
+
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body, html {
+        background: #07170f;
+        color: #fff;
+        font-family: 'Courier New', monospace;
+    }
+
+    .victory-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle, rgba(0, 255, 136, 0.12) 0%, rgba(7, 23, 15, 1) 60%);
+        padding: 30px;
+    }
+
+    .victory-box {
+        max-width: 1000px;
+        width: 100%;
+        text-align: center;
+        padding: 50px 30px;
+        border: 3px solid #00ff88;
+        background: rgba(8, 26, 18, 0.95);
+        box-shadow: 0 0 35px rgba(0, 255, 136, 0.5);
+    }
+
+    .victory-box h1 {
+        font-size: 3em;
+        color: #00ff88;
+        margin-bottom: 20px;
+        letter-spacing: 3px;
+        text-shadow: 0 0 20px rgba(0, 255, 136, 0.8);
+    }
+
+    .victory-box p {
+        color: #d9fff0;
+        font-size: 1.1em;
+        line-height: 1.8;
+        margin-bottom: 30px;
+    }
+
+    .summary {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+    }
+
+    .summary-card {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(0, 255, 136, 0.4);
+        padding: 15px 24px;
+        min-width: 220px;
+    }
+
+    .summary-card strong {
+        display: block;
+        color: #00ff88;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        padding: 12px 10px;
+        border-bottom: 1px solid rgba(0, 255, 136, 0.25);
+        text-align: left;
+        color: #d9fff0;
+    }
+
+    th {
+        background: rgba(0, 255, 136, 0.08);
+        color: #00ff88;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .victory-button {
+        display: inline-block;
+        background: #00cc66;
+        color: #fff;
+        border: none;
+        padding: 16px 40px;
+        font-size: 1.1em;
+        font-weight: 900;
+        letter-spacing: 2px;
+        cursor: pointer;
+        text-transform: uppercase;
+        box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        text-decoration: none;
+        margin-top: 20px;
+    }
+</style>
+
+<div class="victory-container">
+    <div class="victory-box">
+        <h1>✅ SISTEMA RESTABLECIDO</h1>
+        <p>
+            SISTEMA RESTAURADO. Orden de compra cancelada. Puertas desbloqueadas. Buen trabajo.
+        </p>
+
+        <div class="summary">
+            <div class="summary-card">
+                <strong>Tiempo total</strong>
+                @tiempoTotal.ToString(@"hh\:mm\:ss")
+            </div>
+            <div class="summary-card">
+                <strong>Errores</strong>
+                @Model.PartidaActual.ErroresCometidos
+            </div>
+        </div>
+
+        <h3 style="color: #00ff88; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;">Tabla de posiciones</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Posición</th>
+                    <th>Jugador</th>
+                    <th>Tiempo</th>
+                    <th>Errores</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Ranking.Count; i++)
+                {
+                    var item = Model.Ranking[i];
+                    var tiempo = TimeSpan.FromSeconds(item.TiempoTotalSegundos);
+                    <tr>
+                        <td>@(i + 1)</td>
+                        <td>@item.NombreParticipante</td>
+                        <td>@tiempo.ToString(@"hh\:mm\:ss")</td>
+                        <td>@item.ErroresCometidos</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <a asp-controller="Home" asp-action="Instrucciones" class="victory-button">Volver al Inicio</a>
+    </div>
+</div>

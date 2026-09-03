@@ -15,28 +15,47 @@ public class HomeController : Controller
     }
 
     public IActionResult Index()
-    {   
-        return RedirectToAction("Inicio", "Home");
-
+    {
+        return RedirectToAction("Instrucciones", "Home");
     }
-  public IActionResult Inicio()
+
+    public IActionResult Instrucciones()
     {
         return View();
     }
+
+    public IActionResult Inicio()
+    {
+        return RedirectToAction("Instrucciones", "Home");
+    }
+
     [HttpPost]
     public IActionResult ComenzarJuego(string nombreJugador, DateTime fechaHora)
     {
+        if (string.IsNullOrWhiteSpace(nombreJugador))
+        {
+            return RedirectToAction("Instrucciones", "Home");
+        }
+
         BD bd = new BD();
         int partidaId = bd.IniciarPartida(new Partidas(nombreJugador, fechaHora));
         bd.InsertarPedidosParaPartida(partidaId);
+        bd.InsertarInventarioParaPartida(partidaId);
 
         HttpContext.Session.SetString("PartidaId", partidaId.ToString());
+        HttpContext.Session.SetString("NombreJugador", nombreJugador);
 
         return RedirectToAction("Tablero", "Cocina");
     }
-    public IActionResult Privacy()
+
+    public IActionResult Derrota()
     {
         return View();
+    }
+
+    public IActionResult Privacy()
+    {
+        return View("Instrucciones");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

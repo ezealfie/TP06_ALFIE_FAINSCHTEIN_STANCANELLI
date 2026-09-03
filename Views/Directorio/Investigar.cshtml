@@ -466,7 +466,7 @@
                     <thead>
                         <tr>
                             <th>Hora</th>
-                            <th>ID Empleado</th>
+                            <th>Legajo</th>
                             <th>Acción</th>
                         </tr>
                     </thead>
@@ -475,7 +475,7 @@
                         {
                             <tr>
                                 <td>@log.FechaHora.ToString("HH:mm:ss")</td>
-                                <td><strong>@log.EmpleadoId</strong></td>
+                                <td><strong>@log.Legajo</strong></td>
                                 <td>@log.Accion</td>
                             </tr>
                         }
@@ -498,8 +498,8 @@
 
         <form method="post" asp-action="ValidarSospechoso" asp-controller="Directorio">
             <div class="form-group">
-                <label class="form-label">Ingresá el legajo del culpable (Supervisor Nivel 2):</label>
-                <input type="text" name="legajo" class="form-input" placeholder="Ej: EMP-001" required>
+                <label class="form-label">Ingresá el legajo del Supervisor de Nivel 2 que realizó la intrusión:</label>
+                <input type="text" name="legajo" class="form-input" placeholder="Ej: EMP-202" required>
             </div>
 
             <button type="submit" class="form-button">Validar Credencial</button>
@@ -508,25 +508,19 @@
 </div>
 
 <script>
-    // Mostrar modal automáticamente al cargar
-    window.addEventListener('DOMContentLoaded', function() {
-        mostrarModal();
-    });
-
     function cerrarModal() {
-        const modal = document.getElementById('modalhHistory');
-        modal.classList.add('hidden');
+        var modal = document.getElementById('modalhHistory');
+        if (modal) {
+            modal.style.display = 'none';
+        }
     }
 
     function mostrarModal() {
-        const modal = document.getElementById('modalhHistory');
-        modal.classList.remove('hidden');
+        var modal = document.getElementById('modalhHistory');
+        if (modal) {
+            modal.style.display = 'flex';
+        }
     }
 
-    // Cerrar modal si se presiona ESC (opcional)
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape') {
-            cerrarModal();
-        }
-    });
+    mostrarModal();
 </script>

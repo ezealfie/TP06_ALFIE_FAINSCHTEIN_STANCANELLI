@@ -63,6 +63,8 @@ public class DirectorioController : Controller
         }
         else
         {
+            bd.SumarError(partidaId);
+
             // Fallo: volver a la vista con error
             ViewBag.Error = "Credencial rechazada. El legajo no corresponde a un Supervisor de Nivel 2 o no existe.";
             

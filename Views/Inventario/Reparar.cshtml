@@ -1,0 +1,312 @@
+@model List<Inventario>
+
+@{
+    ViewData["Title"] = "Sala 3 - Inventario Saboteado";
+}
+
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body, html {
+        background: #0b1117;
+        color: #fff;
+        font-family: 'Courier New', monospace;
+    }
+
+    .sala-container {
+        background: #0b1117;
+        min-height: 100vh;
+        padding: 30px;
+        position: relative;
+    }
+
+    .warning-banner {
+        background: rgba(255, 0, 85, 0.12);
+        border: 2px solid #ff0055;
+        color: #ff94ae;
+        padding: 18px 20px;
+        font-weight: 900;
+        letter-spacing: 1px;
+        margin: 0 auto 25px auto;
+        max-width: 1100px;
+        text-align: center;
+        box-shadow: 0 0 20px rgba(255, 0, 85, 0.3);
+    }
+
+    .modal {
+        display: flex;
+        position: fixed;
+        z-index: 999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.95);
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+        background: #101a1f;
+        padding: 50px;
+        border: 3px solid #ff0055;
+        border-radius: 2px;
+        max-width: 760px;
+        width: 90%;
+        box-shadow: 0 0 40px rgba(255, 0, 85, 0.6), inset 0 0 30px rgba(255, 0, 85, 0.1);
+        text-align: center;
+        position: relative;
+    }
+
+    .modal-content::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, #ff0055, transparent);
+        animation: flicker 2s infinite;
+    }
+
+    @@keyframes flicker {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+
+    .modal-header {
+        font-size: 2em;
+        color: #ff0055;
+        font-weight: 900;
+        margin-bottom: 25px;
+        letter-spacing: 2px;
+        text-shadow: 0 0 20px rgba(255, 0, 85, 0.8);
+    }
+
+    .modal-body {
+        color: #ffdfe8;
+        font-size: 1.05em;
+        line-height: 1.8;
+        margin-bottom: 30px;
+        text-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
+    }
+
+    .modal-button {
+        background: #1d0b13;
+        color: #ff0055;
+        border: 2px solid #ff0055;
+        padding: 16px 50px;
+        font-size: 1.1em;
+        font-weight: 900;
+        cursor: pointer;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        box-shadow: 0 0 20px rgba(255, 0, 85, 0.4);
+    }
+
+    .modal-button:hover {
+        background: #ff0055;
+        color: #101a1f;
+        box-shadow: 0 0 40px rgba(255, 0, 85, 0.8);
+        transform: translate(0, -3px);
+    }
+
+    .panel {
+        background: #101a1f;
+        border: 2px solid #00ccff;
+        border-radius: 2px;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0, 204, 255, 0.3);
+        max-width: 1100px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    .panel-header {
+        background: #0c1c2a;
+        color: #00ccff;
+        padding: 20px 25px;
+        font-weight: 900;
+        font-size: 1.2em;
+        letter-spacing: 2px;
+    }
+
+    .panel-body {
+        padding: 25px;
+        background: #0b1117;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 14px 12px;
+        border-bottom: 1px solid rgba(0, 204, 255, 0.2);
+        text-align: left;
+    }
+
+    th {
+        background: rgba(0, 204, 255, 0.08);
+        color: #00ccff;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    td {
+        color: #d9f5ff;
+    }
+
+    .editable-row {
+        width: 260px;
+    }
+
+    .editor-form {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .editor-form input {
+        width: 160px;
+        padding: 10px;
+        background: #09151a;
+        border: 2px solid #00ccff;
+        color: #d9f5ff;
+        font-family: 'Courier New', monospace;
+        font-size: 1em;
+        text-align: center;
+    }
+
+    .editor-form button {
+        background: #00a85f;
+        color: #fff;
+        border: 2px solid #8ceecc;
+        padding: 10px 16px;
+        font-weight: 900;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .editor-form button:hover {
+        background: #00d87a;
+    }
+
+    .error-message {
+        background: rgba(255, 0, 85, 0.12);
+        border: 2px solid #ff0055;
+        color: #ff94ae;
+        padding: 18px;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+</style>
+
+<div class="sala-container">
+    <div class="warning-banner">
+        Orden de compra automática por $10.000.000 a punto de enviarse. Error de stock detectado.
+    </div>
+
+    <div id="modalhHistory" class="modal" style="display: flex;">
+        <div class="modal-content">
+            <div class="modal-header">
+                ⚠ FASE FINAL
+            </div>
+            <div class="modal-body">
+                El hacker alteró el stock del Cheddar y de los Medallones. El sistema intenta enviar una compra automática a gran escala.
+                <br><br>
+                El manual escaneado del local indica: <strong>"Regla del local: 1 Pan por orden. Medallones igual a Panes. Cheddar el doble que Medallones."</strong>
+                <br><br>
+                Revisá la tabla, corregí los valores y cancelá la orden antes de que se ejecute.
+            </div>
+            <button class="modal-button" onclick="cerrarModal()">Continuar</button>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">📦 INVENTARIO DEL LOCAL</div>
+        <div class="panel-body">
+            @if (ViewBag.Error != null)
+            {
+                <div class="error-message">
+                    <strong>❌ ERROR:</strong> @ViewBag.Error
+                </div>
+            }
+
+            <form method="post" asp-action="RestaurarSistema" asp-controller="Inventario">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Insumo</th>
+                            <th>Cantidad</th>
+                            <th>Proveedor</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Insumo</td>
+                                <td>
+                                    @if (item.Insumo == "Medallon")
+                                    {
+                                        <input type="number" name="medallones" value="@item.CantidadActual" min="0" required style="width: 140px; background: #09151a; border: 2px solid #00ccff; color: #d9f5ff; padding: 10px; text-align: center;" />
+                                    }
+                                    else if (item.Insumo == "Cheddar")
+                                    {
+                                        <input type="number" name="cheddar" value="@item.CantidadActual" min="0" required style="width: 140px; background: #09151a; border: 2px solid #00ccff; color: #d9f5ff; padding: 10px; text-align: center;" />
+                                    }
+                                    else
+                                    {
+                                        @item.CantidadActual
+                                    }
+                                </td>
+                                <td>@item.Proveedor</td>
+                                <td class="editable-row">
+                                    @if (item.Insumo == "Cheddar" || item.Insumo == "Medallon")
+                                    {
+                                        <span>Editar en línea</span>
+                                    }
+                                    else
+                                    {
+                                        <span>—</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <div style="text-align: center; margin-top: 25px;">
+                    <button type="submit" style="background: #00a85f; color: #fff; border: 2px solid #8ceecc; padding: 14px 32px; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 2px;">REINICIAR SISTEMA</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function cerrarModal() {
+        var modal = document.getElementById('modalhHistory');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    function mostrarModal() {
+        var modal = document.getElementById('modalhHistory');
+        if (modal) {
+            modal.style.display = 'flex';
+        }
+    }
+
+    mostrarModal();
+</script>

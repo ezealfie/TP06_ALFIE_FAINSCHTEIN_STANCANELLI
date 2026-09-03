@@ -1,4 +1,19 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@{
+    var nombreJugador = Context.Session.GetString("NombreJugador");
+    var partidaIdTexto = Context.Session.GetString("PartidaId");
+    DateTime? fechaInicioPartida = null;
+
+    if (int.TryParse(partidaIdTexto, out int partidaId))
+    {
+        fechaInicioPartida = new BD().ObtenerFechaInicioPartida(partidaId);
+    }
+
+    var accionActual = ViewContext.RouteData.Values["action"]?.ToString();
+    var ocultarTimer = accionActual == "Victoria" || accionActual == "Derrota" || accionActual == "Instrucciones" || accionActual == "Inicio" || accionActual == "Index";
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -45,6 +60,26 @@
             text-shadow: 0 0 8px rgba(0, 217, 255, 0.6);
         }
 
+        .header-user {
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-right: 20px;
+        }
+
+        .timer-box {
+            color: #ffcc00;
+            font-family: 'Courier New', monospace;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            border: 2px solid rgba(255, 204, 0, 0.8);
+            padding: 8px 12px;
+            background: rgba(255, 204, 0, 0.08);
+            min-width: 120px;
+            text-align: center;
+        }
+
         footer {
             background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%) !important;
             border-top: 2px solid rgba(0, 217, 255, 0.3) !important;
@@ -61,20 +96,27 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">🔑 LA COCINA MALDITA</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">🔑 ESCAPE DE LA HAMBURGUESERÍA</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between align-items-center">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Instrucciones</a>
-                        </li>
                     </ul>
+
+                    @if (!string.IsNullOrWhiteSpace(nombreJugador))
+                    {
+                        <div class="header-user">Operador: @nombreJugador</div>
+                    }
+
+                    @if (!ocultarTimer)
+                    {
+                        <div id="countdownTimer" class="timer-box">00:10:00</div>
+                    }
                 </div>
             </div>
         </nav>
@@ -87,12 +129,48 @@
 
     <footer class="border-top footer text-muted mt-5">
         <div class="container">
-            &copy; 2026 - La Cocina Maldita - <a asp-area="" asp-controller="Home" asp-action="Privacy">Instrucciones</a>
+            &copy; 2026 - Escape de la Hamburguesería
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        (function () {
+            var timerElement = document.getElementById('countdownTimer');
+            if (!timerElement) {
+                return;
+            }
+
+            var fechaInicio = '@(fechaInicioPartida.HasValue ? fechaInicioPartida.Value.ToString("o") : DateTime.Now.AddMinutes(10).ToString("o"))';
+            var limiteMs = 10 * 60 * 1000;
+            var fechaInicioMs = new Date(fechaInicio).getTime();
+            var ahora = Date.now();
+            var restante = Math.max(0, limiteMs - (ahora - fechaInicioMs));
+
+            function formatearTiempo(ms) {
+                var totalSegundos = Math.floor(ms / 1000);
+                var horas = Math.floor(totalSegundos / 3600);
+                var minutos = Math.floor((totalSegundos % 3600) / 60);
+                var segundos = totalSegundos % 60;
+                return String(horas).padStart(2, '0') + ':' + String(minutos).padStart(2, '0') + ':' + String(segundos).padStart(2, '0');
+            }
+
+            function actualizar() {
+                var ahoraActual = Date.now();
+                var diferencia = fechaInicioMs + limiteMs - ahoraActual;
+                if (diferencia <= 0) {
+                    timerElement.textContent = '00:00:00';
+                    window.location.href = '@Url.Action("Derrota", "Home")';
+                    return;
+                }
+                timerElement.textContent = formatearTiempo(diferencia);
+            }
+
+            actualizar();
+            setInterval(actualizar, 1000);
+        })();
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
