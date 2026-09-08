@@ -30,7 +30,7 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public IActionResult ComenzarJuego(string nombreJugador, DateTime fechaHora)
+    public IActionResult ComenzarJuego(string nombreJugador)
     {
         if (string.IsNullOrWhiteSpace(nombreJugador))
         {
@@ -38,6 +38,7 @@ public class HomeController : Controller
         }
 
         BD bd = new BD();
+        DateTime fechaHora = DateTime.Now;
         int partidaId = bd.IniciarPartida(new Partidas(nombreJugador, fechaHora));
         bd.InsertarPedidosParaPartida(partidaId);
         bd.InsertarInventarioParaPartida(partidaId);

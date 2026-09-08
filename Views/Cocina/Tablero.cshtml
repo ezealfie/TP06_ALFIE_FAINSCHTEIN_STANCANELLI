@@ -463,7 +463,7 @@
         </div>
     }
 
-    <form method="post" asp-action="PurgarSistema" asp-controller="Cocina">
+    <form method="post" action="@Url.Action("PurgarSistema", "Cocina")">
         <div class="pedidos-grid">
             @foreach (var pedido in pedidosAleatorios)
             {

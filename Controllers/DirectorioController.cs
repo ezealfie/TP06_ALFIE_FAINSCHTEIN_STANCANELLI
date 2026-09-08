@@ -6,7 +6,6 @@ namespace TP06.Controllers;
 
 public class DirectorioController : Controller
 {
-    [HttpGet]
     public IActionResult Investigar()
     {
         // Verificar seguridad: obtener PartidaId de Session
@@ -26,17 +25,14 @@ public class DirectorioController : Controller
 
         // Obtener empleados con sus jerarquías
         List<EmpleadoConJerarquia> empleados = bd.ObtenerEmpleadosConJerarquia();
-        
+
         // Obtener logs de auditoría
         List<LogsAuditoria> logs = bd.ObtenerLogsAuditoria();
 
-        var viewModel = new InvestigacionViewModel
-        {
-            Empleados = empleados,
-            Logs = logs
-        };
+        ViewBag.Empleados = empleados;
+        ViewBag.Logs = logs;
 
-        return View(viewModel);
+        return View();
     }
 
     [HttpPost]
@@ -67,14 +63,11 @@ public class DirectorioController : Controller
 
             // Fallo: volver a la vista con error
             ViewBag.Error = "Credencial rechazada. El legajo no corresponde a un Supervisor de Nivel 2 o no existe.";
-            
-            var viewModel = new InvestigacionViewModel
-            {
-                Empleados = bd.ObtenerEmpleadosConJerarquia(),
-                Logs = bd.ObtenerLogsAuditoria()
-            };
 
-            return View("Investigar", viewModel);
+            ViewBag.Empleados = bd.ObtenerEmpleadosConJerarquia();
+            ViewBag.Logs = bd.ObtenerLogsAuditoria();
+
+            return View("Investigar");
         }
     }
 }

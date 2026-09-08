@@ -1,5 +1,3 @@
-@model InvestigacionViewModel
-
 @{
     ViewData["Title"] = "Sala 2 - Investigación de Directorio";
 }
@@ -408,7 +406,7 @@
                 ⚠ FASE 2: IDENTIFICAR AL INFILTRADO
             </div>
             <div class="modal-body">
-                Un usuario con <strong>privilegios de Nivel 2</strong> saboteó el sistema a la madrugada. 
+                Un usuario con <strong>privilegios</strong> saboteó el sistema a la madrugada. 
                 <br><br>
                 Cruzá los registros de auditoría con el directorio de empleados para encontrar el <strong>legajo del culpable</strong>.
                 <br><br>
@@ -440,7 +438,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var emp in Model.Empleados)
+                        @foreach (EmpleadoConJerarquia emp in (List<EmpleadoConJerarquia>)ViewBag.Empleados)
                         {
                             <tr>
                                 <td><strong>@emp.Legajo</strong></td>
@@ -471,7 +469,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var log in Model.Logs)
+                        @foreach (LogsAuditoria log in (List<LogsAuditoria>)ViewBag.Logs)
                         {
                             <tr>
                                 <td>@log.FechaHora.ToString("HH:mm:ss")</td>
@@ -496,10 +494,10 @@
             </div>
         }
 
-        <form method="post" asp-action="ValidarSospechoso" asp-controller="Directorio">
+        <form method="post" action="@Url.Action("ValidarSospechoso", "Directorio")">
             <div class="form-group">
-                <label class="form-label">Ingresá el legajo del Supervisor de Nivel 2 que realizó la intrusión:</label>
-                <input type="text" name="legajo" class="form-input" placeholder="Ej: EMP-202" required>
+                <label class="form-label">Ingresá el legajo del empleado que realizó la intrusión:</label>
+                <input type="text" name="legajo" class="form-input" placeholder="Ej: EMP-000" required>
             </div>
 
             <button type="submit" class="form-button">Validar Credencial</button>

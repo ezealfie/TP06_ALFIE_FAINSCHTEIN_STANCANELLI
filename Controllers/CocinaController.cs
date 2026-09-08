@@ -6,7 +6,6 @@ namespace TP06.Controllers;
 
 public class CocinaController : Controller
 {
-    [HttpGet]
     public IActionResult Tablero()
     {
         string? partidaIdTexto = HttpContext.Session.GetString("PartidaId");

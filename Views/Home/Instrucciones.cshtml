@@ -80,11 +80,10 @@
             <li>Si el cronómetro llega a cero, el sistema queda comprometido.</li>
         </ul>
 
-        <form method="post" asp-action="ComenzarJuego" asp-controller="Home">
+        <form method="post" action="@Url.Action("ComenzarJuego", "Home")">
             <div class="mb-3">
                 <input type="text" name="nombreJugador" id="nombreJugador" placeholder="Ingresá tu nombre de operador" required />
             </div>
-            <input type="hidden" name="fechaHora" value="@DateTime.Now" />
             <div class="cta">
                 <button type="submit">Iniciar misión</button>
             </div>

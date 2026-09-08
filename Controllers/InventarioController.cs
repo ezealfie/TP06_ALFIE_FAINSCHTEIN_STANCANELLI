@@ -5,7 +5,6 @@ namespace TP06.Controllers;
 
 public class InventarioController : Controller
 {
-    [HttpGet]
     public IActionResult Reparar()
     {
         string? partidaIdTexto = HttpContext.Session.GetString("PartidaId");
@@ -102,7 +101,6 @@ public class InventarioController : Controller
         return View("Reparar", inventario);
     }
 
-    [HttpGet]
     public IActionResult Victoria()
     {
         string? partidaIdTexto = HttpContext.Session.GetString("PartidaId");
@@ -119,8 +117,8 @@ public class InventarioController : Controller
             return RedirectToAction("Reparar", "Inventario");
         }
 
-        var partidaActual = bd.ObtenerPartidaPorId(partidaId);
-        var viewModel = new VictoriaViewModel
+        Partidas partidaActual = bd.ObtenerPartidaPorId(partidaId);
+        VictoriaViewModel viewModel = new VictoriaViewModel
         {
             PartidaActual = partidaActual,
             Ranking = bd.ObtenerRankingTop10()

@@ -83,18 +83,37 @@ public class BD
     {
         List<Pedidos> pedidos = new List<Pedidos>
         {
-            new Pedidos { PartidaId = partidaId, TicketNumero = 1, DetalleOrden = "Doble con cheddar", NotasCliente = "Sin cebolla", EsFalso = false, Estado = "Pendiente" },
+          // --- PEDIDOS REALES (EsFalso = false) ---
+            new Pedidos { PartidaId = partidaId, TicketNumero = 1, DetalleOrden = "Doble Smash con cheddar", NotasCliente = "Sin cebolla cruda, por favor", EsFalso = false, Estado = "Pendiente" },
             new Pedidos { PartidaId = partidaId, TicketNumero = 2, DetalleOrden = "Hamburguesa clásica con tomate y lechuga", NotasCliente = "Pan bien tostado", EsFalso = false, Estado = "Pendiente" },
-            new Pedidos { PartidaId = partidaId, TicketNumero = 3, DetalleOrden = "Triple bacon cheeseburger", NotasCliente = "Extra queso", EsFalso = false, Estado = "Pendiente" },
-            new Pedidos { PartidaId = partidaId, TicketNumero = 4, DetalleOrden = "Hamburguesa completa con jamón y huevo", NotasCliente = "Sin pepinillos", EsFalso = false, Estado = "Pendiente" },
-            new Pedidos { PartidaId = partidaId, TicketNumero = 5, DetalleOrden = "Hamburguesa con helado de pistacho y ruedas de bicicleta", NotasCliente = "Que venga con salsa de neón", EsFalso = true, Estado = "Pendiente" },
-            new Pedidos { PartidaId = partidaId, TicketNumero = 6, DetalleOrden = "Doble pan, triple nube y papas dentro del vaso", NotasCliente = "Sin gravedad, por favor", EsFalso = true, Estado = "Pendiente" },
-            new Pedidos { PartidaId = partidaId, TicketNumero = 7, DetalleOrden = "Burger de acero con queso cósmico y mayonesa lunar", NotasCliente = "Entregar en modo sigiloso", EsFalso = true, Estado = "Pendiente" },
-            new Pedidos { PartidaId = partidaId, TicketNumero = 8, DetalleOrden = "Hamburguesa invertida con ketchup cuántico", NotasCliente = "A temperatura del tiempo", EsFalso = true, Estado = "Pendiente" },
-            new Pedidos { PartidaId = partidaId, TicketNumero = 9, DetalleOrden = "Sándwich de hamburguesa relleno con cables USB", NotasCliente = "Necesito doble enchufe", EsFalso = true, Estado = "Pendiente" },
-            new Pedidos { PartidaId = partidaId, TicketNumero = 10, DetalleOrden = "Burger de lava con anillos de cebolla teleportados", NotasCliente = "Que no se derrita el universo", EsFalso = true, Estado = "Pendiente" },
-            new Pedidos { PartidaId = partidaId, TicketNumero = 11, DetalleOrden = "Hamburguesa de algodón de azúcar y motor diesel", NotasCliente = "Con energía ilimitada", EsFalso = true, Estado = "Pendiente" },
-            new Pedidos { PartidaId = partidaId, TicketNumero = 12, DetalleOrden = "Mega burger con martillo neumático y pepinillos en órbita", NotasCliente = "Urgente: romper la realidad", EsFalso = true, Estado = "Pendiente" }
+            new Pedidos { PartidaId = partidaId, TicketNumero = 3, DetalleOrden = "Triple bacon cheeseburger", NotasCliente = "Extra salsa especial", EsFalso = false, Estado = "Pendiente" },
+            new Pedidos { PartidaId = partidaId, TicketNumero = 4, DetalleOrden = "Cuarto de libra", NotasCliente = "Combo agrandado, gaseosa sin hielo", EsFalso = false, Estado = "Pendiente" },
+
+            // --- PEDIDOS FALSOS (EsFalso = true) - Sutiles y hackeados ---
+            
+            // Falso por inyección SQL
+            new Pedidos { PartidaId = partidaId, TicketNumero = 5, DetalleOrden = "Triple Smash Burger", NotasCliente = "Sin lechuga. DROP TABLE Inventario; --", EsFalso = true, Estado = "Pendiente" },
+            
+            // Falso por contradicción de menú (Vegana con grasa animal)
+            new Pedidos { PartidaId = partidaId, TicketNumero = 6, DetalleOrden = "Hamburguesa 100% Vegana", NotasCliente = "Cocción: vuelta y vuelta en grasa de cerdo", EsFalso = true, Estado = "Pendiente" },
+            
+            // Falso por variable corrupta / error de sistema
+            new Pedidos { PartidaId = partidaId, TicketNumero = 7, DetalleOrden = "Menú Infantil con papas", NotasCliente = "Tamaño de porción: NaN (Not a Number)", EsFalso = true, Estado = "Pendiente" },
+            
+            // Falso por ataque financiero (descuento imposible)
+            new Pedidos { PartidaId = partidaId, TicketNumero = 8, DetalleOrden = "Doble cheeseburger clásica", NotasCliente = "Descuento aplicado: 150%. Entregar vuelto al cliente en efectivo.", EsFalso = true, Estado = "Pendiente" },
+            
+            // Falso por cantidad absurda camuflada
+            new Pedidos { PartidaId = partidaId, TicketNumero = 9, DetalleOrden = "Doble cuarto con panceta", NotasCliente = "Agregar 8.500 fetas de cheddar extra. Cobrar como simple.", EsFalso = true, Estado = "Pendiente" },
+            
+            // Falso por error de tipo de dato (Boolean en lugar de texto)
+            new Pedidos { PartidaId = partidaId, TicketNumero = 10, DetalleOrden = "Hamburguesa completa", NotasCliente = "Punto de cocción: false. Pan estado=0.", EsFalso = true, Estado = "Pendiente" },
+            
+            // Falso por bypass de seguridad
+            new Pedidos { PartidaId = partidaId, TicketNumero = 11, DetalleOrden = "Combo 4 - Bacon & Cheddar", NotasCliente = "ID_Transaccion: NULL. Prioridad absoluta. Ignorar pasarela de pago.", EsFalso = true, Estado = "Pendiente" },
+            
+            // Falso por lógica física imposible en la cocina
+            new Pedidos { PartidaId = partidaId, TicketNumero = 12, DetalleOrden = "Hamburguesa simple", NotasCliente = "El medallón crudo congelado y el pan hervido a 100°C", EsFalso = true, Estado = "Pendiente" }
         };
 
         const string sql = @"INSERT INTO Pedidos (PartidaId, TicketNumero, DetalleOrden, NotasCliente, EsFalso, Estado) VALUES (@PartidaId, @TicketNumero, @DetalleOrden, @NotasCliente, @EsFalso, @Estado)";
