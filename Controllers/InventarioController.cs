@@ -75,6 +75,7 @@ public class InventarioController : Controller
         }
 
         bd.SumarError(partidaId);
+        HttpContext.Session.SetInt32("ErroresCometidos", bd.ErroresCometidos(partidaId));
         ViewBag.Error = "Sincronización fallida: el stock de Medallones y Cheddar no respeta la regla del local. Debe coincidir con el Pan y el Cheddar debe ser el doble de los Medallones.";
 
         List<Inventario> inventario = bd.ObtenerInventarioPorPartida(partidaId);

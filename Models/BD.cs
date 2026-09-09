@@ -79,6 +79,18 @@ public class BD
         }
     }
 
+    public int ErroresCometidos(int partidaId)
+    {
+
+        const string sql = "SELECT ErroresCometidos FROM Partidas WHERE Id = @PartidaId";
+
+        using (SqlConnection conexion = new SqlConnection(_connectionString))
+        {
+            return conexion.QueryFirstOrDefault<int>(sql, new { PartidaId = partidaId });
+        }
+
+
+    }
     public void InsertarPedidosParaPartida(int partidaId)
     {
         List<Pedidos> pedidos = new List<Pedidos>
@@ -139,10 +151,10 @@ public class BD
     {
         const string sqlCheck = @"SELECT COUNT(1) FROM ProgresoSala 
                                  WHERE PartidaId = @PartidaId AND SalaId = @SalaId";
-        
+
         using (SqlConnection conexion = new SqlConnection(_connectionString))
         {
-            int existe = conexion.QueryFirstOrDefault<int>(sqlCheck, 
+            int existe = conexion.QueryFirstOrDefault<int>(sqlCheck,
                 new { PartidaId = partidaId, SalaId = salaId });
 
             if (existe > 0)
@@ -171,7 +183,7 @@ public class BD
 
         using (SqlConnection conexion = new SqlConnection(_connectionString))
         {
-            int resultado = conexion.QueryFirstOrDefault<int>(sql, 
+            int resultado = conexion.QueryFirstOrDefault<int>(sql,
                 new { PartidaId = partidaId, SalaId = salaId });
             return resultado > 0;
         }
@@ -333,7 +345,7 @@ public class BD
         const string sql = @"SELECT TOP 10
                              NombreParticipante,
                              ErroresCometidos,
-                             DATEDIFF(SECOND, FechaInicio, FechaFin) AS TiempoTotalSegundos
+                             (DATEDIFF(SECOND, FechaInicio, FechaFin) + (ErroresCometidos * 45)) AS TiempoTotalSegundos
                              FROM Partidas
                              WHERE FechaFin IS NOT NULL
                              ORDER BY TiempoTotalSegundos ASC, ErroresCometidos ASC";

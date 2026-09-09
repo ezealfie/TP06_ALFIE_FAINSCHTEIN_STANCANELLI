@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Victoria";
     var tiempoTotal = Model.PartidaActual.FechaFin.HasValue
-        ? (Model.PartidaActual.FechaFin.Value - Model.PartidaActual.FechaInicio)
+        ? TimeSpan.FromSeconds((Model.PartidaActual.FechaFin.Value - Model.PartidaActual.FechaInicio).TotalSeconds + (Model.PartidaActual.ErroresCometidos * 45))
         : TimeSpan.Zero;
 }
 
@@ -154,6 +154,6 @@
             </tbody>
         </table>
 
-        <a href="@Url.Action("Instrucciones", "Home")" class="victory-button">Volver al Inicio</a>
+        <a href="@Url.Action("Index", "Home")" class="victory-button">Volver al Inicio</a>
     </div>
 </div>

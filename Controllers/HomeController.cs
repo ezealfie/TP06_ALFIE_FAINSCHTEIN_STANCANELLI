@@ -16,17 +16,13 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        return RedirectToAction("Instrucciones", "Home");
-    }
-
-    public IActionResult Instrucciones()
-    {
         return View();
     }
 
+
     public IActionResult Inicio()
     {
-        return RedirectToAction("Instrucciones", "Home");
+        return View();
     }
 
     [HttpPost]
@@ -34,7 +30,7 @@ public class HomeController : Controller
     {
         if (string.IsNullOrWhiteSpace(nombreJugador))
         {
-            return RedirectToAction("Instrucciones", "Home");
+            return RedirectToAction("Inicio", "Home");
         }
 
         BD bd = new BD();

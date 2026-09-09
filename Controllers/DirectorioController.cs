@@ -60,9 +60,10 @@ public class DirectorioController : Controller
         else
         {
             bd.SumarError(partidaId);
+            HttpContext.Session.SetInt32("ErroresCometidos", bd.ErroresCometidos(partidaId));
 
             // Fallo: volver a la vista con error
-            ViewBag.Error = "Credencial rechazada. El legajo no corresponde a un Supervisor de Nivel 2 o no existe.";
+            ViewBag.Error = "Credencial rechazada. El legajo no corresponde al empleado o no existe.";
 
             ViewBag.Empleados = bd.ObtenerEmpleadosConJerarquia();
             ViewBag.Logs = bd.ObtenerLogsAuditoria();

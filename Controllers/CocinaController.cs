@@ -36,6 +36,8 @@ public class CocinaController : Controller
         if (ticketsSeleccionados == null || ticketsSeleccionados.Length == 0)
         {
             bd.SumarError(partidaId);
+            var errores = bd.ErroresCometidos(partidaId);
+            HttpContext.Session.SetInt32("ErroresCometidos", errores);
             ViewBag.Mensaje = "Seleccioná al menos un pedido para purgar.";
             ViewBag.TipoMensaje = "warning";
             return View("Tablero", bd.ObtenerPedidosPendientes(partidaId));
@@ -45,6 +47,8 @@ public class CocinaController : Controller
         if (!bd.TodosLosPedidosSonFalsos(partidaId, ticketsSeleccionados))
         {
             bd.SumarError(partidaId);
+            var errores = bd.ErroresCometidos(partidaId);
+            HttpContext.Session.SetInt32("ErroresCometidos", errores);
             ViewBag.Mensaje = "❌ Penalización: seleccionaste un pedido real. El sistema está más comprometido.";
             ViewBag.TipoMensaje = "danger";
             return View("Tablero", bd.ObtenerPedidosPendientes(partidaId));
