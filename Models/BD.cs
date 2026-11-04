@@ -96,21 +96,21 @@ public class BD
         List<Pedidos> pedidos = new List<Pedidos>
         {
           // --- PEDIDOS REALES (EsFalso = false) ---
-            new Pedidos { PartidaId = partidaId, TicketNumero = 1, DetalleOrden = "Doble Smash con cheddar", NotasCliente = "Sin cebolla cruda, por favor", EsFalso = false, Estado = "Pendiente" },
+            new Pedidos { PartidaId = partidaId, TicketNumero = 5, DetalleOrden = "Doble Smash con cheddar", NotasCliente = "Sin cebolla cruda, por favor", EsFalso = false, Estado = "Pendiente" },
             new Pedidos { PartidaId = partidaId, TicketNumero = 2, DetalleOrden = "Hamburguesa clásica con tomate y lechuga", NotasCliente = "Pan bien tostado", EsFalso = false, Estado = "Pendiente" },
-            new Pedidos { PartidaId = partidaId, TicketNumero = 3, DetalleOrden = "Triple bacon cheeseburger", NotasCliente = "Extra salsa especial", EsFalso = false, Estado = "Pendiente" },
-            new Pedidos { PartidaId = partidaId, TicketNumero = 4, DetalleOrden = "Cuarto de libra", NotasCliente = "Combo agrandado, gaseosa sin hielo", EsFalso = false, Estado = "Pendiente" },
+            new Pedidos { PartidaId = partidaId, TicketNumero = 7, DetalleOrden = "Triple bacon cheeseburger", NotasCliente = "Extra salsa especial", EsFalso = false, Estado = "Pendiente" },
+            new Pedidos { PartidaId = partidaId, TicketNumero = 11, DetalleOrden = "Cuarto de libra", NotasCliente = "Combo agrandado, gaseosa sin hielo", EsFalso = false, Estado = "Pendiente" },
 
             // --- PEDIDOS FALSOS (EsFalso = true) - Sutiles y hackeados ---
             
             // Falso por inyección SQL
-            new Pedidos { PartidaId = partidaId, TicketNumero = 5, DetalleOrden = "Triple Smash Burger", NotasCliente = "Sin lechuga. DROP TABLE Inventario; --", EsFalso = true, Estado = "Pendiente" },
+            new Pedidos { PartidaId = partidaId, TicketNumero = 1, DetalleOrden = "Triple Smash Burger", NotasCliente = "Sin lechuga. DROP TABLE Inventario; --", EsFalso = true, Estado = "Pendiente" },
             
             // Falso por contradicción de menú (Vegana con grasa animal)
             new Pedidos { PartidaId = partidaId, TicketNumero = 6, DetalleOrden = "Hamburguesa 100% Vegana", NotasCliente = "Cocción: vuelta y vuelta en grasa de cerdo", EsFalso = true, Estado = "Pendiente" },
             
             // Falso por variable corrupta / error de sistema
-            new Pedidos { PartidaId = partidaId, TicketNumero = 7, DetalleOrden = "Menú Infantil con papas", NotasCliente = "Tamaño de porción: NaN (Not a Number)", EsFalso = true, Estado = "Pendiente" },
+            new Pedidos { PartidaId = partidaId, TicketNumero = 3, DetalleOrden = "Menú Infantil con papas", NotasCliente = "Tamaño de porción: NaN (Not a Number)", EsFalso = true, Estado = "Pendiente" },
             
             // Falso por ataque financiero (descuento imposible)
             new Pedidos { PartidaId = partidaId, TicketNumero = 8, DetalleOrden = "Doble cheeseburger clásica", NotasCliente = "Descuento aplicado: 150%. Entregar vuelto al cliente en efectivo.", EsFalso = true, Estado = "Pendiente" },
@@ -122,7 +122,7 @@ public class BD
             new Pedidos { PartidaId = partidaId, TicketNumero = 10, DetalleOrden = "Hamburguesa completa", NotasCliente = "Punto de cocción: false. Pan estado=0.", EsFalso = true, Estado = "Pendiente" },
             
             // Falso por bypass de seguridad
-            new Pedidos { PartidaId = partidaId, TicketNumero = 11, DetalleOrden = "Combo 4 - Bacon & Cheddar", NotasCliente = "ID_Transaccion: NULL. Prioridad absoluta. Ignorar pasarela de pago.", EsFalso = true, Estado = "Pendiente" },
+            new Pedidos { PartidaId = partidaId, TicketNumero = 4, DetalleOrden = "Combo 4 - Bacon & Cheddar", NotasCliente = "ID_Transaccion: NULL. Prioridad absoluta. Ignorar pasarela de pago.", EsFalso = true, Estado = "Pendiente" },
             
             // Falso por lógica física imposible en la cocina
             new Pedidos { PartidaId = partidaId, TicketNumero = 12, DetalleOrden = "Hamburguesa simple", NotasCliente = "El medallón crudo congelado y el pan hervido a 100°C", EsFalso = true, Estado = "Pendiente" }
